@@ -1,5 +1,6 @@
 REBAR := $(shell which rebar 2>/dev/null || echo ./rebar)
 REBAR_URL := https://github.com/downloads/basho/rebar/rebar
+INSTALL_DIR=`erl -noshell -eval 'io:format("~n~s~n", [code:root_dir()]).' -s erlang halt | tail -n 1`/lib/eiconv
 
 all: compile
 
@@ -22,3 +23,7 @@ clean: rebar
 
 distclean: 
 	rm -f ./rebar 
+	
+install: test compile		
+	mkdir -pv $(INSTALL_DIR)
+	cp -rfv src ebin c_src priv   $(INSTALL_DIR)
