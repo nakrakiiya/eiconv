@@ -4,10 +4,12 @@ REBAR_URL := https://github.com/downloads/basho/rebar/rebar
 all: compile
 
 ./rebar:
-	erl -noshell -s inets start -s ssl start \
-        -eval '{ok, saved_to_file} = httpc:request(get, {"$(REBAR_URL)", []}, [], [{stream, "./rebar"}])' \
-        -s inets stop -s init stop
-	chmod +x ./rebar
+	if [ ! -e /usr/bin/rebar ] ; then \
+		erl -noshell -s inets start -s ssl start \
+	        -eval '{ok, saved_to_file} = httpc:request(get, {"$(REBAR_URL)", []}, [], [{stream, "./rebar"}])' \
+	        -s inets stop -s init stop ; \
+		chmod +x ./rebar ; \
+	fi
 
 compile: rebar
 	$(REBAR) compile
